@@ -32,14 +32,15 @@ header {
 #chat-box {
   flex: 1;
   padding: 15px;
-  overflow-y: auto;             /* scrollable chat */
   display: flex;
-  flex-direction: column;       /* stack messages vertically */
-  gap: 10px;                    /* spacing between messages */
-  min-height: 0;                /* proper flex scrolling */
-  word-wrap: break-word;        /* wrap long words */
-  scroll-behavior: smooth;      /* smooth scroll when new messages added */
-  white-space: pre-wrap;        /* preserve newlines from Shift+Enter */
+  flex-direction: column;      /* stack messages vertically */
+  gap: 10px;                   /* spacing between messages */
+  overflow-y: auto;            /* vertical scroll enabled */
+  min-height: 0;               /* crucial for flexbox scrolling */
+  max-height: 100%;            /* fill available space */
+  word-wrap: break-word;       /* wrap long words */
+  white-space: pre-wrap;       /* preserve Shift+Enter newlines */
+  scroll-behavior: smooth;     /* smooth scroll to bottom on new message */
 }
 
 /* Messages */
@@ -73,10 +74,10 @@ header {
   border: 1px solid #ccc;
   padding: 10px;
   font-size: 16px;
-  resize: vertical;             /* allow vertical resize */
-  min-height: 50px;             /* default height */
-  max-height: 200px;            /* limit height */
-  overflow-y: auto;             /* scroll inside textarea */
+  resize: vertical;            /* allow vertical resize */
+  min-height: 50px;            /* default height */
+  max-height: 200px;           /* prevent huge box */
+  overflow-y: auto;            /* scroll inside textarea */
   box-sizing: border-box;
   border-radius: 5px;
   outline: none;
