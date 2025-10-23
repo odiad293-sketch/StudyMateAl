@@ -1,3 +1,4 @@
+// Get DOM elements
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-btn');
@@ -5,10 +6,10 @@ const sendButton = document.getElementById('send-btn');
 // Append message to chat
 function appendMessage(message, sender) {
     const msg = document.createElement('div');
-    msg.classList.add('message', sender);
+    msg.classList.add('message', sender); // 'user' or 'bot'
     msg.textContent = message;
     chatBox.appendChild(msg);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollTop = chatBox.scrollHeight; // auto-scroll
 }
 
 // Send message
@@ -16,40 +17,38 @@ async function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
+    // Append user message
     appendMessage(text, 'user');
     userInput.value = '';
 
     try {
+        // Call backend AI endpoint
         const botReply = await getAIResponse(text);
         appendMessage(botReply, 'bot');
     } catch (err) {
-        appendMessage("Error: Could not get AI response.", 'bot');
+        appendMessage("Error: Could not get response.", 'bot');
         console.error(err);
     }
 }
 
-// Call OpenAI API (replace YOUR_API_KEY with your key)
+// Function to call backend AI endpoint
 async function getAIResponse(userText) {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("/api/ai", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer YOUR_API_KEY"
-        },
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: userText }],
-            max_tokens: 300
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: userText })
     });
+
+    if (!response.ok) throw new Error("Network response was not ok");
+
     const data = await response.json();
-    return data.choices[0].message.content;
+    return data.answer;
 }
 
-// Button click
+// Button click to send
 sendButton.addEventListener('click', sendMessage);
 
-// Enter key to send, Shift+Enter for new line
+// Enter key sends message, Shift+Enter adds newline
 userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
