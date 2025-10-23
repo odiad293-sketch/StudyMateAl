@@ -1,8 +1,8 @@
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
-const sendButton = document.querySelector('.input-area button'); // your send button
+const sendButton = document.querySelector('.input-area button'); // send button
 
-// Your creator info
+// Creator info
 const creatorInfo = "I was created by Engineer Odia Etiosa Destiny, a computer science engineer passionate about AI and education.";
 
 // Function to append a message to chat
@@ -12,7 +12,7 @@ function addMessage(content, className, autoScroll = true) {
     msg.innerText = content;
     chatBox.appendChild(msg);
 
-    // Only auto-scroll if allowed
+    // Auto-scroll only if allowed
     if (autoScroll) {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -32,12 +32,12 @@ async function sendMessage() {
     try {
         let botReply;
 
-        // Check if user asks who created the AI
+        // Check if user asks about the creator
         const creatorKeywords = ["who created you", "who made you", "your creator", "who built you"];
         if (creatorKeywords.some(kw => text.toLowerCase().includes(kw))) {
-            botReply = creatorInfo; // return your name and description
+            botReply = creatorInfo;
         } else {
-            // Otherwise, send to backend
+            // Send to backend
             const res = await fetch('/ask', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -56,23 +56,17 @@ async function sendMessage() {
     }
 }
 
-// Send message on button click
+// Only send on button click
 sendButton.addEventListener('click', sendMessage);
 
-// Enter to send, Shift+Enter to add newline
+// Shift+Enter still adds a newline
 userInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        if (e.shiftKey) {
-            // Shift+Enter -> insert newline at cursor
-            const cursorPos = userInput.selectionStart;
-            const textBefore = userInput.value.substring(0, cursorPos);
-            const textAfter = userInput.value.substring(cursorPos);
-            userInput.value = textBefore + '\n' + textAfter;
-            userInput.selectionStart = userInput.selectionEnd = cursorPos + 1;
-        } else {
-            // Enter -> send message
-            e.preventDefault();
-            sendMessage();
-        }
+    if (e.key === 'Enter' && e.shiftKey) {
+        const cursorPos = userInput.selectionStart;
+        const textBefore = userInput.value.substring(0, cursorPos);
+        const textAfter = userInput.value.substring(cursorPos);
+        userInput.value = textBefore + '\n' + textAfter;
+        userInput.selectionStart = userInput.selectionEnd = cursorPos + 1;
+        e.preventDefault();
     }
 });
