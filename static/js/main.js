@@ -28,18 +28,17 @@ function sendMessage() {
     // 2. Call AI/VHDL backend to get a response
     // Replace this with your actual AI function
     getAIResponse(text).then(botReply => {
-        // Append bot message directly (no "Studymate.ai" text)
         appendMessage(botReply, 'bot');
     });
 }
 
-// Example placeholder function for AI response
-// This simulates an AI reply — replace it with your backend
+// Example placeholder function for AI response (replace with your backend)
 function getAIResponse(userText) {
     return new Promise(resolve => {
+        // Simulate AI processing delay
         setTimeout(() => {
-            resolve("This is the bot's direct answer to: " + userText);
-        }, 500); // simulate processing delay
+            resolve("Studymate.ai response: " + userText);
+        }, 500); // 500ms delay
     });
 }
 
