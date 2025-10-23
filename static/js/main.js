@@ -1,28 +1,47 @@
+// Get DOM elements
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
+const sendButton = document.querySelector('.input-area button');
 
-function addMessage(content, className) {
-  const msg = document.createElement('div');
-  msg.classList.add('message', className);
-  msg.innerText = content;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
+// Function to append message to chat
+function appendMessage(message, sender) {
+    const msg = document.createElement('div');
+    msg.classList.add('message', sender); // 'user' or 'bot'
+    msg.textContent = message;
+    chatBox.appendChild(msg);
+
+    // Auto-scroll to bottom whenever a new message is added
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-async function sendMessage() {
-  const text = userInput.value.trim();
-  if (!text) return;
+// Function to send message
+function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
 
-  addMessage(text, 'user');
-  userInput.value = '';
+    // Append user message
+    appendMessage(text, 'user');
 
-  const res = await fetch('/ask', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({message: text})
-  });
+    // Clear input box
+    userInput.value = '';
 
-  const data = await res.json();
-  if (data.reply) addMessage(data.reply, 'bot');
-  else addMessage("Error: " + (data.error || "Something went wrong"), 'bot');
+    // Call your AI function here (replace with your actual function)
+    const botReply = getBotResponse(text); // Example placeholder
+    appendMessage(botReply, 'bot');
 }
+
+// Example AI response function (replace with your actual AI/VHDL logic)
+function getBotResponse(input) {
+    return `Studymate.ai Response: "${input}"`; // temporary placeholder
+}
+
+// Send message when button is clicked
+sendButton.addEventListener('click', sendMessage);
+
+// Send message on Enter key (Shift+Enter for new line)
+userInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // prevent newline
+        sendMessage();
+    }
+});
