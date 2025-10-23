@@ -53,11 +53,21 @@ header {
   border-top: 1px solid #ccc;
 }
 
-.input-area input {
+.input-area textarea {
   flex: 1;
   border: none;
   padding: 10px;
   font-size: 16px;
+  resize: vertical;        /* allow vertical resizing */
+  min-height: 50px;        /* make it taller */
+  max-height: 150px;       /* optional limit */
+  box-sizing: border-box;  /* include padding in width */
+  outline: none;           /* remove focus outline */
+}
+
+.input-area textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
 }
 
 .input-area button {
@@ -65,4 +75,5 @@ header {
   color: white;
   border: none;
   padding: 10px 15px;
+  cursor: pointer;
 }
