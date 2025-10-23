@@ -11,49 +11,45 @@ function appendMessage(message, sender) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Send user message and get AI response
-function sendMessage() {
+// Send message
+async function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
     appendMessage(text, 'user');
     userInput.value = '';
 
-    // Call AI backend
-    getAIResponse(text)
-      .then(botReply => {
+    try {
+        const botReply = await getAIResponse(text);
         appendMessage(botReply, 'bot');
-      })
-      .catch(err => {
-        appendMessage("Error: Could not get response.", 'bot');
+    } catch (err) {
+        appendMessage("Error: Could not get AI response.", 'bot');
         console.error(err);
-      });
+    }
 }
 
-// Example AI backend function (replace with real API call)
+// Call OpenAI API (replace YOUR_API_KEY with your key)
 async function getAIResponse(userText) {
-    // Example: simulate AI processing
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve("Here is the AI reply to your question: " + userText);
-        }, 500);
-    });
-
-    /* Example if using OpenAI API:
-    const response = await fetch('/api/openai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: userText })
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_API_KEY"
+        },
+        body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: userText }],
+            max_tokens: 300
+        })
     });
     const data = await response.json();
-    return data.answer;
-    */
+    return data.choices[0].message.content;
 }
 
 // Button click
 sendButton.addEventListener('click', sendMessage);
 
-// Enter key to send, Shift+Enter for newline
+// Enter key to send, Shift+Enter for new line
 userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
