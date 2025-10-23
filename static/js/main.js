@@ -6,14 +6,15 @@ const sendButton = document.querySelector('.input-area button'); // send button
 const creatorInfo = "I was created by Engineer Odia Etiosa Destiny, a computer science engineer passionate about AI and education.";
 
 // Function to append a message to chat
-function addMessage(content, className, autoScroll = true) {
+function addMessage(content, className) {
     const msg = document.createElement('div');
-    msg.classList.add('message', className); // 'user' or 'bot'
+    msg.classList.add('message', className);
     msg.innerText = content;
     chatBox.appendChild(msg);
 
-    // Auto-scroll only if allowed
-    if (autoScroll) {
+    // Auto-scroll only if user is near the bottom
+    const isNearBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 50;
+    if (isNearBottom) {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 }
@@ -56,10 +57,10 @@ async function sendMessage() {
     }
 }
 
-// Only send on button click
+// Send message only on button click
 sendButton.addEventListener('click', sendMessage);
 
-// Shift+Enter still adds a newline
+// Shift+Enter adds newline, Enter alone does nothing
 userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && e.shiftKey) {
         const cursorPos = userInput.selectionStart;
