@@ -1,57 +1,54 @@
-// Get DOM elements
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
-const sendButton = document.getElementById('send-btn');
+const sendButton = document.querySelector('.input-area button'); // assumes your button exists
 
-// Append message to chat
-function appendMessage(message, sender) {
+// Function to append a message to chat
+function addMessage(content, className) {
     const msg = document.createElement('div');
-    msg.classList.add('message', sender); // 'user' or 'bot'
-    msg.textContent = message;
+    msg.classList.add('message', className); // 'user' or 'bot'
+    msg.innerText = content;
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight; // auto-scroll
 }
 
-// Send message
+// Function to send a message
 async function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
-    // Append user message
-    appendMessage(text, 'user');
+    // 1. Append user message
+    addMessage(text, 'user');
+
+    // 2. Clear input
     userInput.value = '';
 
     try {
-        // Call backend AI endpoint
-        const botReply = await getAIResponse(text);
-        appendMessage(botReply, 'bot');
+        // 3. Send message to backend
+        const res = await fetch('/ask', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({message: text})
+        });
+
+        const data = await res.json();
+
+        // 4. Append bot reply
+        if (data.reply) addMessage(data.reply, 'bot');
+        else addMessage("Error: " + (data.error || "Something went wrong"), 'bot');
+
     } catch (err) {
-        appendMessage("Error: Could not get response.", 'bot');
+        addMessage("Error: Could not get response.", 'bot');
         console.error(err);
     }
 }
 
-// Function to call backend AI endpoint
-async function getAIResponse(userText) {
-    const response = await fetch("/api/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: userText })
-    });
-
-    if (!response.ok) throw new Error("Network response was not ok");
-
-    const data = await response.json();
-    return data.answer;
-}
-
-// Button click to send
+// Button click to send message
 sendButton.addEventListener('click', sendMessage);
 
-// Enter key sends message, Shift+Enter adds newline
+// Enter key sends message, Shift+Enter for newline
 userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
+        e.preventDefault(); // prevent newline
         sendMessage();
     }
 });
