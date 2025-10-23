@@ -1,54 +1,100 @@
+/* Body and app container */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.app {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background: #007bff;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
 /* Chat box */
 #chat-box {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;          /* allow full vertical scrolling */
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    height: 400px;             /* or adjust to fit your layout */
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;          /* scrollable chat */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 400px;             /* fixed height, adjust as needed */
 }
 
 /* Messages */
 .message {
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 10px;
-    line-height: 1.5;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 10px;
+  line-height: 1.5;
+  word-wrap: break-word;
 }
 
 .user {
-    background: #dcf8c6;
-    align-self: flex-end;
+  background: #dcf8c6;
+  align-self: flex-end;
 }
 
 .bot {
-    background: #f1f0f0;
-    align-self: flex-start;
+  background: #f1f0f0;
+  align-self: flex-start;
 }
 
 /* Input area */
 .input-area {
-    display: flex;
-    border-top: 1px solid #ccc;
+  display: flex;
+  border-top: 1px solid #ccc;
+  padding: 5px;
 }
 
 .input-area textarea {
-    flex: 1;
-    border: 1px solid #ccc;
-    padding: 10px;
-    font-size: 16px;
-    resize: vertical;          /* user can drag taller */
-    min-height: 50px;
-    max-height: 200px;         /* prevent huge box */
-    overflow-y: auto;           /* scroll inside textarea if too long */
-    box-sizing: border-box;
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  resize: vertical;          /* allow dragging taller */
+  min-height: 50px;          /* default height */
+  max-height: 200px;         /* prevent huge box */
+  overflow-y: auto;           /* scroll inside textarea */
+  box-sizing: border-box;
+  border-radius: 5px;
+  outline: none;
 }
 
+.input-area textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+}
+
+/* Send button */
 .input-area button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+
+.input-area button:hover {
+  background: #0056b3;
 }
