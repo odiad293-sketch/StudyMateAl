@@ -14,20 +14,43 @@
       <p>Your personal tutor and study friend</p>
     </header>
 
+    <!-- Chat box where messages appear -->
     <main id="chat-box"></main>
 
+    <!-- Input area with multi-line textarea -->
     <div class="input-area">
-      <input id="user-input" type="text" placeholder="Ask me anything...">
+      <textarea id="user-input" placeholder="Ask me anything..." rows="2"></textarea>
       <button onclick="sendMessage()">Send</button>
     </div>
   </div>
 
   <script src="/static/js/main.js"></script>
   <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/static/js/service_worker.js')
-    .then(() => console.log('Service Worker Registered'));
-  }
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/static/js/service_worker.js')
+      .then(() => console.log('Service Worker Registered'));
+    }
+
+    // Optional: auto-scroll chat-box when new messages are added
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+
+    // Make Enter key send message, Shift+Enter for new line
+    userInput.addEventListener('keydown', function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        document.querySelector('.input-area button').click();
+      }
+    });
+
+    // Scroll chat-box to bottom whenever new message is added
+    function scrollChatToBottom() {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Example: after sendMessage adds a message, call scrollChatToBottom()
+    // In your main.js, call scrollChatToBottom() after appending each message
   </script>
 </body>
 </html>
