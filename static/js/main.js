@@ -3,42 +3,50 @@ const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.querySelector('.input-area button');
 
-// Function to append message to chat
+// Function to append a message to the chat
 function appendMessage(message, sender) {
     const msg = document.createElement('div');
     msg.classList.add('message', sender); // 'user' or 'bot'
     msg.textContent = message;
     chatBox.appendChild(msg);
 
-    // Auto-scroll to bottom whenever a new message is added
+    // Scroll chat to bottom
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Function to send message
+// Function to send a message
 function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
-    // Append user message
+    // 1. Append user message
     appendMessage(text, 'user');
 
-    // Clear input box
+    // Clear the textarea
     userInput.value = '';
 
-    // Call your AI function here (replace with your actual function)
-    const botReply = getBotResponse(text); // Example placeholder
-    appendMessage(botReply, 'bot');
+    // 2. Call AI/VHDL backend to get a response
+    // Replace this with your actual AI function
+    getAIResponse(text).then(botReply => {
+        // Append bot message directly (no "Studymate.ai" text)
+        appendMessage(botReply, 'bot');
+    });
 }
 
-// Example AI response function (replace with your actual AI/VHDL logic)
-function getBotResponse(input) {
-    return `Studymate.ai Response: "${input}"`; // temporary placeholder
+// Example placeholder function for AI response
+// This simulates an AI reply — replace it with your backend
+function getAIResponse(userText) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve("This is the bot's direct answer to: " + userText);
+        }, 500); // simulate processing delay
+    });
 }
 
-// Send message when button is clicked
+// Send message when send button is clicked
 sendButton.addEventListener('click', sendMessage);
 
-// Send message on Enter key (Shift+Enter for new line)
+// Send message on Enter key, allow Shift+Enter for new line
 userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault(); // prevent newline
