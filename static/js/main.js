@@ -1,54 +1,62 @@
-// Get DOM elements
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
-const sendButton = document.querySelector('.input-area button');
+const sendButton = document.getElementById('send-btn');
 
-// Function to append a message to the chat
+// Append message to chat
 function appendMessage(message, sender) {
     const msg = document.createElement('div');
-    msg.classList.add('message', sender); // 'user' or 'bot'
+    msg.classList.add('message', sender);
     msg.textContent = message;
     chatBox.appendChild(msg);
-
-    // Scroll chat to bottom
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Function to send a message
+// Send user message and get AI response
 function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
-    // 1. Append user message
     appendMessage(text, 'user');
-
-    // Clear the textarea
     userInput.value = '';
 
-    // 2. Call AI/VHDL backend to get a response
-    // Replace this with your actual AI function
-    getAIResponse(text).then(botReply => {
+    // Call AI backend
+    getAIResponse(text)
+      .then(botReply => {
         appendMessage(botReply, 'bot');
-    });
+      })
+      .catch(err => {
+        appendMessage("Error: Could not get response.", 'bot');
+        console.error(err);
+      });
 }
 
-// Example placeholder function for AI response (replace with your backend)
-function getAIResponse(userText) {
+// Example AI backend function (replace with real API call)
+async function getAIResponse(userText) {
+    // Example: simulate AI processing
     return new Promise(resolve => {
-        // Simulate AI processing delay
         setTimeout(() => {
-            resolve("Studymate.ai response: " + userText);
-        }, 500); // 500ms delay
+            resolve("Here is the AI reply to your question: " + userText);
+        }, 500);
     });
+
+    /* Example if using OpenAI API:
+    const response = await fetch('/api/openai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: userText })
+    });
+    const data = await response.json();
+    return data.answer;
+    */
 }
 
-// Send message when send button is clicked
+// Button click
 sendButton.addEventListener('click', sendMessage);
 
-// Send message on Enter key, allow Shift+Enter for new line
+// Enter key to send, Shift+Enter for newline
 userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // prevent newline
+        e.preventDefault();
         sendMessage();
     }
 });
