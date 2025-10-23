@@ -1,14 +1,18 @@
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
-const sendButton = document.querySelector('.input-area button'); // assumes your button exists
+const sendButton = document.querySelector('.input-area button'); // your send button
 
 // Function to append a message to chat
-function addMessage(content, className) {
+function addMessage(content, className, autoScroll = true) {
     const msg = document.createElement('div');
     msg.classList.add('message', className); // 'user' or 'bot'
     msg.innerText = content;
     chatBox.appendChild(msg);
-    chatBox.scrollTop = chatBox.scrollHeight; // auto-scroll
+
+    // Only auto-scroll if allowed
+    if (autoScroll) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 }
 
 // Function to send a message
@@ -16,14 +20,14 @@ async function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
-    // 1. Append user message
+    // Append user message
     addMessage(text, 'user');
 
-    // 2. Clear input
+    // Clear input
     userInput.value = '';
 
     try {
-        // 3. Send message to backend
+        // Send message to backend
         const res = await fetch('/ask', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -32,7 +36,7 @@ async function sendMessage() {
 
         const data = await res.json();
 
-        // 4. Append bot reply
+        // Append bot reply
         if (data.reply) addMessage(data.reply, 'bot');
         else addMessage("Error: " + (data.error || "Something went wrong"), 'bot');
 
@@ -42,13 +46,23 @@ async function sendMessage() {
     }
 }
 
-// Button click to send message
+// Send message on button click
 sendButton.addEventListener('click', sendMessage);
 
-// Enter key sends message, Shift+Enter for newline
+// Enter to send, Shift+Enter to add newline
 userInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // prevent newline
-        sendMessage();
+    if (e.key === 'Enter') {
+        if (e.shiftKey) {
+            // Shift+Enter -> insert newline at cursor
+            const cursorPos = userInput.selectionStart;
+            const textBefore = userInput.value.substring(0, cursorPos);
+            const textAfter = userInput.value.substring(cursorPos);
+            userInput.value = textBefore + '\n' + textAfter;
+            userInput.selectionStart = userInput.selectionEnd = cursorPos + 1;
+        } else {
+            // Enter -> send message
+            e.preventDefault();
+            sendMessage();
+        }
     }
 });
