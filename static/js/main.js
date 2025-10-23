@@ -2,6 +2,9 @@ const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.querySelector('.input-area button'); // your send button
 
+// Your creator info
+const creatorInfo = "I was created by Engineer Odia Etiosa Destiny, a computer science engineer passionate about AI and education.";
+
 // Function to append a message to chat
 function addMessage(content, className, autoScroll = true) {
     const msg = document.createElement('div');
@@ -27,18 +30,25 @@ async function sendMessage() {
     userInput.value = '';
 
     try {
-        // Send message to backend
-        const res = await fetch('/ask', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({message: text})
-        });
+        let botReply;
 
-        const data = await res.json();
+        // Check if user asks who created the AI
+        const creatorKeywords = ["who created you", "who made you", "your creator", "who built you"];
+        if (creatorKeywords.some(kw => text.toLowerCase().includes(kw))) {
+            botReply = creatorInfo; // return your name and description
+        } else {
+            // Otherwise, send to backend
+            const res = await fetch('/ask', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: text})
+            });
 
-        // Append bot reply
-        if (data.reply) addMessage(data.reply, 'bot');
-        else addMessage("Error: " + (data.error || "Something went wrong"), 'bot');
+            const data = await res.json();
+            botReply = data.reply || "Error: " + (data.error || "Something went wrong");
+        }
+
+        addMessage(botReply, 'bot');
 
     } catch (err) {
         addMessage("Error: Could not get response.", 'bot');
