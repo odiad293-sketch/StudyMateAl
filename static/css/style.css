@@ -1,104 +1,123 @@
-/* Body and app container */
+/* General body styling */
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #f0f2f5;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.app {
-  width: 100%;
-  max-width: 500px;
-  background: white;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  border-radius: 15px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+/* Chat container */
+.chat-container {
+    width: 100%;
+    max-width: 500px;
+    height: 80vh;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Header */
-header {
-  background: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-}
-
-/* Chat box */
+/* Chat messages area */
 #chat-box {
-  flex: 1;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;      /* stack messages vertically */
-  gap: 10px;                   /* spacing between messages */
-  overflow-y: auto;            /* vertical scroll enabled */
-  min-height: 0;               /* crucial for flexbox scrolling */
-  max-height: 100%;            /* fill available space */
-  word-wrap: break-word;       /* wrap long words */
-  white-space: pre-wrap;       /* preserve Shift+Enter newlines */
-  scroll-behavior: smooth;     /* smooth scroll to bottom on new message */
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto; /* Makes chat scrollable */
+    scroll-behavior: smooth; /* Smooth scroll to bottom */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Messages */
+/* Scrollbar styling */
+#chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+#chat-box::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Individual message bubbles */
 .message {
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 10px;
-  line-height: 1.5;
-  word-wrap: break-word;
+    margin-bottom: 12px;
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    word-wrap: break-word;
+    white-space: pre-wrap; /* preserves line breaks from Shift+Enter */
+    line-height: 1.4;
 }
 
-.user {
-  background: #dcf8c6;
-  align-self: flex-end;
+/* User message styling */
+.message.user {
+    background-color: #0084ff;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
 }
 
-.bot {
-  background: #f1f0f0;
-  align-self: flex-start;
+/* AI message styling */
+.message.bot {
+    background-color: #e5e5ea;
+    color: #000;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+}
+
+/* Timestamps (optional if you want to show) */
+.message .timestamp {
+    display: block;
+    font-size: 10px;
+    color: #999;
+    margin-top: 5px;
+    text-align: right;
 }
 
 /* Input area */
 .input-area {
-  display: flex;
-  border-top: 1px solid #ccc;
-  padding: 5px;
+    display: flex;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ccc;
 }
 
-.input-area textarea {
-  flex: 1;
-  border: 1px solid #ccc;
-  padding: 10px;
-  font-size: 16px;
-  resize: vertical;            /* allow vertical resize */
-  min-height: 50px;            /* default height */
-  max-height: 200px;           /* prevent huge box */
-  overflow-y: auto;            /* scroll inside textarea */
-  box-sizing: border-box;
-  border-radius: 5px;
-  outline: none;
+.input-area input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+    resize: none;
 }
 
-.input-area textarea:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0,123,255,0.5);
-}
-
-/* Send button */
 .input-area button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-left: 5px;
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #0084ff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .input-area button:hover {
-  background: #0056b3;
+    background-color: #006bbd;
+}
+
+/* Typing indicator */
+.typing {
+    font-style: italic;
+    color: #666;
 }
